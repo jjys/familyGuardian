@@ -197,20 +197,18 @@ with col2:
               delta=f"{int(st.session_state.person['risk_score']) - 10} vs base", delta_color="inverse")
 
 with col3:
-    hr = int(st.session_state.person['heart_rate'])
-    st.metric("Heart Rate (BPM)", f"❤️ {hr}", delta=f"{hr-75} bpm", delta_color="inverse")
+    dist = calculate_distance(st.session_state.person['current_loc'], st.session_state.person['home_loc'])
+    st.metric("Distance from Home", f"{dist:.3f} km")
 
 with col4:
-    sim_time_display = st.session_state.sim_time.strftime("%I:%M %p")
-    is_night = st.session_state.sim_time.hour >= 18 or st.session_state.sim_time.hour < 6
-    icon = "🌙" if is_night else "☀️"
-    st.metric("Simulation Time", f"{icon} {sim_time_display}")
+    hr = int(st.session_state.person['heart_rate'])
+    st.metric("Heart Rate (BPM)", f"❤️ {hr}", delta=f"{hr-75} bpm", delta_color="inverse")
 
 # Sidebar Settings
 with st.sidebar:
     st.header("⚙️ Configuration")
     safe_distance = st.slider("Safe Distance (km)", 0.1, 5.0, 0.5)
-    simulation_speed = st.slider("Simulation Speed", 1.0, 5.0, 1.0)
+    simulation_speed = st.slider("Simulation Speed", 0.1, 3.0, 0.5) # Speed factor
     
     st.markdown("### ❤️ Biometrics")
     st.session_state.max_hr_threshold = st.slider("Max Heart Rate Threshold", 80, 150, 100, help="Trigger alert if HR exceeds this value")
